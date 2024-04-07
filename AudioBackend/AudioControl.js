@@ -23,10 +23,14 @@ import { shufflePlaylist, orderPlaylist } from './QueueSystem.js';
 import { playAudio, currentTrack, updatePlaylist } from './PlayAudio.js';
 import { player } from './VoiceInitialization.js';
 import i18next from '../Utilities/i18n.js';
+import { resolve, extname, basename } from 'node:path'
 const t = i18next.t;
 
+const audioFileExt = ['.mp3', '.flac'];
 const { shuffle, repeat } = JSON.parse(readFileSync('./config.json', 'utf-8'));
-export const files = readdirSync('music');
+export const files = readdirSync('music', { withFileTypes: true, recursive: true })
+  .filter(file => file.isFile() && audioFileExt.includes(extname(file.name).toLowerCase()))
+  .map(file => resolve(file.path, file.name));
 export let playerState;
 export let playerStatus;
 export let isAudioStatePaused;

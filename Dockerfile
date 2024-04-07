@@ -28,4 +28,6 @@ COPY --chown=node:node --from=build /usr/src/bot/node_modules ./node_modules
 
 COPY --chown=node:node . ./
 
-CMD ["dumb-init", "node", "bot.js"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
+CMD ["bash", "-c", "node deploy-command.js && exec node bot.js"]

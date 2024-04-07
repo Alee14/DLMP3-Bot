@@ -26,6 +26,7 @@ import { player } from './VoiceInitialization.js';
 import { audioState, files } from './AudioControl.js';
 import { integer } from '../Commands/play.js';
 import i18next from '../Utilities/i18n.js';
+import { resolve, extname, basename } from 'node:path';
 
 const { statusChannel, txtFile } = JSON.parse(readFileSync('./config.json', 'utf-8'));
 const t = i18next.t;
@@ -44,9 +45,13 @@ export let audioAlbum;
 export let audioPicture;
 export let duration;
 
-const inputFiles = readdirSync('music');
+const audioFileExt = ['.mp3', '.flac'];
+const inputFiles = await readdirSync('music', { withFileTypes: true, recursive: true })
+  .filter(file => file.isFile() && audioFileExt.includes(extname(file.name.toLowerCase())))
+  .map(file => resolve(file.path, file.name));
+
 export async function playAudio(bot) {
-  const resource = createAudioResource('music/' + audio);
+  const resource = createAudioResource(audio);
   player.play(resource);
 
   console.log(t('nowPlayingFile', { audio }));
@@ -54,10 +59,10 @@ export async function playAudio(bot) {
   audioState(0);
   audioPicture = null;
 
-  const audioFile = audio;
+  const audioFile = basename(audio);
 
   try {
-    const { common, format } = await parseFile('music/' + audio);
+    const { common, format } = await parseFile(audio);
     metadataEmpty = false;
     if (common.title && common.artist && common.year && common.album) {
       audioTitle = common.title;
