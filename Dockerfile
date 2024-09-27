@@ -2,7 +2,7 @@ FROM node:latest AS build
 
 WORKDIR /usr/src/bot
 
-RUN apt-get update && apt-get install -y build-essential libtool autoconf automake python3 
+RUN apt-get update && apt-get install -y build-essential libtool autoconf automake python3
 
 COPY package.json ./
 
