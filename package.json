@@ -9,8 +9,9 @@
     "eslint": "eslint ."
   },
   "dependencies": {
-    "@discordjs/opus": "^0.9.0",
+    "@discordjs/rest": "^2.4.0",
     "@discordjs/voice": "^0.17.0",
+    "discord-api-types": "^0.37.101",
     "discord.js": "^14.16.2",
     "ffmpeg-static": "^5.2.0",
     "i18next": "^23.15.1",
